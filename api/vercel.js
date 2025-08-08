@@ -1,8 +1,8 @@
 // api/vercel.js
 import { handle } from 'hono/vercel';
 
-// dist はデプロイ時に同梱される（vercel.json の includeFiles で指定）
-import { setConfig } from '../dist/config.js';
+// ここを index.js 付きに
+import { setConfig } from '../dist/config/index.js';
 import app from '../dist/app.js';
 import logger from '../dist/utils/logger.js';
 

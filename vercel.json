@@ -3,12 +3,6 @@
   "framework": null,
   "installCommand": "pnpm install --no-frozen-lockfile",
   "buildCommand": "pnpm build",
-  "functions": {
-    "api/vercel.ts": {
-      "runtime": "nodejs22.x",
-      "maxDuration": 60
-    }
-  },
   "routes": [
     { "src": "/(.*)", "dest": "/api/vercel.ts" }
   ],

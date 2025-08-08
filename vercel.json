@@ -4,16 +4,13 @@
     {
       "src": "api/vercel.ts",
       "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["dist/**"]
-      }
+      "config": { "includeFiles": ["dist/**"] }
     }
   ],
   "routes": [
     { "src": "/(.*)", "dest": "/api/vercel.ts" }
   ],
-  "installCommand": "pnpm install --no-frozen-lockfile",
-  "buildCommand": "pnpm build",
+  "buildCommand": "npm install && npm run build",
   "env": {
     "CACHE_TYPE": "memory",
     "ALLOW_USER_HOTLINK": "true"

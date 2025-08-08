@@ -1,12 +1,13 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": null,
-  "installCommand": "yarn install",
-  "buildCommand": "yarn build",
-  "functions": {
-    "api/**/*.js": { "runtime": "nodejs22.x" }
-  },
+  "version": 2,
+  "builds": [
+    {
+      "src": "lib/index.ts",
+      "use": "@vercel/node"
+    }
+  ],
   "env": {
-    "CACHE_TYPE": "memory"
+    "CACHE_TYPE": "memory",
+    "ALLOW_USER_HOTLINK": "true"
   }
 }

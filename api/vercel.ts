@@ -1,16 +1,16 @@
-const path = require('node:path');
-const moduleAlias = require('module-alias');
-moduleAlias.addAlias('@', path.join(__dirname, './dist'));
+// api/vercel.ts (ESM)
+import { handle } from 'hono/vercel';
 
-const { setConfig } = require('./dist/config');
-setConfig({
-    NO_LOGFILES: true,
-});
+// dist を同梱している前提（vercel.json の includeFiles で dist/** を入れている）
+import { setConfig } from './dist/config.js';
+import app from './dist/app.js';
+import logger from './dist/utils/logger.js';
 
-const { handle } = require('hono/vercel');
-const app = require('./dist/app');
-const logger = require('./dist/utils/logger');
+// ログファイル出力抑制
+setConfig({ NO_LOGFILES: true });
 
-logger.info(`🎉 RSSHub is running! Cheers!`);
+// 起動ログ
+logger.info('🎉 RSSHub is running! Cheers!');
 
-module.exports = handle(app);
+// ESM では default export でハンドラを返す
+export default handle(app);

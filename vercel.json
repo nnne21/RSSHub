@@ -3,6 +3,9 @@
   "framework": null,
   "installCommand": "yarn install",
   "buildCommand": "yarn build",
+  "functions": {
+    "api/**/*.js": { "runtime": "nodejs22.x" }
+  },
   "env": {
     "CACHE_TYPE": "memory"
   }

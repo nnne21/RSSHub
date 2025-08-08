@@ -1,11 +1,8 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "lib/index.ts",
-      "use": "@vercel/node"
-    }
-  ],
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "pnpm install --no-frozen-lockfile",
+  "buildCommand": "",
   "env": {
     "CACHE_TYPE": "memory",
     "ALLOW_USER_HOTLINK": "true"

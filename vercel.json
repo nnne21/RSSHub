@@ -2,7 +2,16 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "pnpm install --no-frozen-lockfile",
-  "buildCommand": "",
+  "buildCommand": "pnpm build",
+  "functions": {
+    "api/vercel.ts": {
+      "runtime": "nodejs18.x",
+      "maxDuration": 60
+    }
+  },
+  "routes": [
+    { "src": "/(.*)", "dest": "/api/vercel.ts" }
+  ],
   "env": {
     "CACHE_TYPE": "memory",
     "ALLOW_USER_HOTLINK": "true"

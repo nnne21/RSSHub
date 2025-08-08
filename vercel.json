@@ -1,5 +1,21 @@
 {
-    "framework": null,
-    "github": { "silent": true },
-    "routes": [{ "src": "/.*", "dest": "/api/vercel.ts" }]
+  "framework": null,
+  "github": { "silent": true },
+  "routes": [
+    { "src": "/.*", "dest": "/api/vercel.ts" }
+  ],
+  "functions": {
+    "api/**.js": {
+      "runtime": "nodejs18.x"
+    },
+    "api/**.ts": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "buildCommand": "yarn install --ignore-optional && yarn build",
+  "build": {
+    "env": {
+      "CACHE_TYPE": "memory"
+    }
+  }
 }

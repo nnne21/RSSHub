@@ -1,12 +1,9 @@
 {
-  "version": 2,
-  "functions": {
-    "api/**/*.js": { "runtime": "nodejs18.x" },
-    "api/**/*.ts": { "runtime": "nodejs18.x" }
-  },
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "yarn install --ignore-optional",
+  "buildCommand": "",
   "env": {
     "CACHE_TYPE": "memory"
-  },
-  "installCommand": "yarn install --ignore-optional",
-  "buildCommand": "yarn build || echo 'no build step'"
+  }
 }

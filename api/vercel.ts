@@ -1,15 +1,15 @@
 const path = require('node:path');
 const moduleAlias = require('module-alias');
-moduleAlias.addAlias('@', path.join(__dirname, '../lib'));
+moduleAlias.addAlias('@', path.join(__dirname, '../dist'));
 
-const { setConfig } = require('../lib/config');
+const { setConfig } = require('../dist/config');
 setConfig({
     NO_LOGFILES: true,
 });
 
 const { handle } = require('hono/vercel');
-const app = require('../lib/app');
-const logger = require('../lib/utils/logger');
+const app = require('../dist/app');
+const logger = require('../dist/utils/logger');
 
 logger.info(`🎉 RSSHub is running! Cheers!`);
 

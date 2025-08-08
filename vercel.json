@@ -2,13 +2,13 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/vercel.ts",
+      "src": "api/vercel.js",
       "use": "@vercel/node",
       "config": { "includeFiles": ["dist/**"] }
     }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "/api/vercel.ts" }
+    { "src": "/(.*)", "dest": "/api/vercel.js" }
   ],
   "buildCommand": "npm install && npm run build",
   "env": {

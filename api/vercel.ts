@@ -1,4 +1,4 @@
-// api/vercel.ts（ESM, TypeScriptを直接import）
+// api/vercel.ts
 import { handle } from 'hono/vercel';
 
 import { setConfig } from '../lib/config';

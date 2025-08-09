@@ -10,8 +10,10 @@
   "routes": [
     { "src": "/(.*)", "dest": "/api/vercel.js" }
   ],
-  "buildCommand": "npm install && npm run build",
+  "buildCommand": "npm install --include=dev && npm run build && echo '--- ls at project root ---' && ls -la && echo '--- ls dist ---' && ls -la dist || (echo 'BUILD STEP FAILED'; exit 1)",
   "env": {
+    "NODE_ENV": "development",
+    "NPM_CONFIG_PRODUCTION": "false",
     "CACHE_TYPE": "memory",
     "ALLOW_USER_HOTLINK": "true"
   }

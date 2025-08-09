@@ -1,19 +1,12 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "api/vercel.js",
-      "use": "@vercel/node",
-      "config": { "includeFiles": ["dist/**"] }
-    }
+    { "src": "api/vercel.ts", "use": "@vercel/node" }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "/api/vercel.js" }
+    { "src": "/(.*)", "dest": "/api/vercel.ts" }
   ],
-  "buildCommand": "npm install --include=dev && npm run build && echo '--- ls at project root ---' && ls -la && echo '--- ls dist ---' && ls -la dist || (echo 'BUILD STEP FAILED'; exit 1)",
   "env": {
-    "NODE_ENV": "development",
-    "NPM_CONFIG_PRODUCTION": "false",
     "CACHE_TYPE": "memory",
     "ALLOW_USER_HOTLINK": "true"
   }

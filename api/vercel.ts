@@ -1,7 +1,7 @@
 // api/vercel.ts
 import { handle } from 'hono/vercel';
 
-import { setConfig } from '../lib/config';
+import { setConfig } from '../lib/config.js';
 import app from '../lib/app';
 import logger from '../lib/utils/logger';
 

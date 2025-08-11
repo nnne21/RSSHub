@@ -1,11 +1,4 @@
 {
-  "version": 2,
-  "builds": [
-    { "src": "api/vercel.ts", "use": "@vercel/node" }
-  ],
-  "routes": [
-    { "src": "/(.*)", "dest": "/api/vercel.ts" }
-  ],
   "env": {
     "CACHE_TYPE": "memory",
     "ALLOW_USER_HOTLINK": "true"

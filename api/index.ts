@@ -1,34 +1,58 @@
-// api/index.ts - 独立動作版（依存関係なし）
-import { Hono } from 'hono';
-import { handle } from 'hono/vercel';
+// api/index.ts - Vercel標準形式
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-const app = new Hono();
+export default function handler(req: VercelRequest, res: VercelResponse) {
+  const { method, url } = req;
+  const path = url || '/';
 
-// 基本のルート
-app.get('/', (c) => {
-  return c.json({ 
-    message: 'Twitter Auto-Reply Bot RSSHub',
-    status: 'running',
-    version: '1.0.0',
-    timestamp: new Date().toISOString(),
-    environment: {
-      CACHE_TYPE: process.env.CACHE_TYPE || 'not set',
-      ALLOW_USER_HOTLINK: process.env.ALLOW_USER_HOTLINK || 'not set'
-    }
-  });
-});
+  // CORS設定
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-// Twitter特定アカウントのRSSフィード生成
-app.get('/twitter/:username/rss', async (c) => {
-  try {
-    const username = c.req.param('username');
-    
+  // OPTIONSリクエスト（CORS preflight）
+  if (method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  // ルーティング
+  if (path === '/' || path === '/api' || path === '/api/') {
+    return res.status(200).json({
+      message: 'Twitter Auto-Reply Bot RSSHub',
+      status: 'running',
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      environment: {
+        CACHE_TYPE: process.env.CACHE_TYPE || 'not set',
+        ALLOW_USER_HOTLINK: process.env.ALLOW_USER_HOTLINK || 'not set'
+      }
+    });
+  }
+
+  // ヘルスチェック
+  if (path === '/health' || path === '/api/health') {
+    return res.status(200).json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: {
+        NODE_ENV: process.env.NODE_ENV || 'production',
+        CACHE_TYPE: process.env.CACHE_TYPE || 'not set',
+        ALLOW_USER_HOTLINK: process.env.ALLOW_USER_HOTLINK || 'not set'
+      }
+    });
+  }
+
+  // Twitter RSS
+  if (path.startsWith('/twitter/') && path.endsWith('/rss')) {
+    const pathParts = path.split('/');
+    const username = pathParts[2];
+
     if (!username) {
-      return c.json({ error: 'Username is required' }, 400);
+      return res.status(400).json({ error: 'Username is required' });
     }
-    
+
     const now = new Date();
-    
     const rssContent = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
@@ -54,85 +78,47 @@ app.get('/twitter/:username/rss', async (c) => {
   </channel>
 </rss>`;
 
-    return c.text(rssContent, 200, {
-      'Content-Type': 'application/rss+xml; charset=utf-8',
-      'Cache-Control': 'public, max-age=300'
-    });
-  } catch (error) {
-    console.error('RSS生成エラー:', error);
-    return c.json({ 
-      error: 'RSS生成に失敗しました',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, 500);
+    res.setHeader('Content-Type', 'application/rss+xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=300');
+    return res.status(200).send(rssContent);
   }
-});
 
-// ヘルスチェック用エンドポイント
-app.get('/health', (c) => {
-  return c.json({ 
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime?.() || 0,
-    environment: {
-      NODE_ENV: process.env.NODE_ENV || 'production',
-      CACHE_TYPE: process.env.CACHE_TYPE || 'not set',
-      ALLOW_USER_HOTLINK: process.env.ALLOW_USER_HOTLINK || 'not set'
-    }
-  });
-});
+  // API情報
+  if (path === '/api/info') {
+    return res.status(200).json({
+      name: 'Twitter Bot RSS API',
+      version: '1.0.0',
+      description: '特定のTwitterユーザーのツイートをRSSフィード形式で配信',
+      endpoints: {
+        'GET /': 'ホーム - API基本情報とステータス',
+        'GET /twitter/:username/rss': 'ユーザーのツイートRSSフィード生成',
+        'GET /health': 'ヘルスチェック - システム状態確認',
+        'GET /api/info': 'API情報 - 利用可能なエンドポイント一覧'
+      },
+      usage: {
+        example: '/twitter/example_user/rss',
+        description: 'usernameを実際のTwitterユーザー名に置き換えてください',
+        contentType: 'application/rss+xml'
+      },
+      notes: [
+        '現在はサンプルデータを返します',
+        '本格運用時には実際のTwitter APIまたはRSSHubを使用予定',
+        'GASからのアクセスも想定した設計です'
+      ]
+    });
+  }
 
-// API情報
-app.get('/api/info', (c) => {
-  return c.json({
-    name: 'Twitter Bot RSS API',
-    version: '1.0.0',
-    description: '特定のTwitterユーザーのツイートをRSSフィード形式で配信',
-    endpoints: {
-      'GET /': 'ホーム - API基本情報とステータス',
-      'GET /twitter/:username/rss': 'ユーザーのツイートRSSフィード生成',
-      'GET /health': 'ヘルスチェック - システム状態とEnvironment変数確認',
-      'GET /api/info': 'API情報 - 利用可能なエンドポイント一覧'
-    },
-    usage: {
-      example: '/twitter/example_user/rss',
-      description: 'usernameを実際のTwitterユーザー名に置き換えてください',
-      contentType: 'application/rss+xml'
-    },
-    notes: [
-      '現在はサンプルデータを返します',
-      '本格運用時には実際のTwitter APIまたはRSSHubを使用予定',
-      'GASからのアクセスも想定した設計です'
-    ]
-  });
-});
-
-// エラーハンドリング
-app.onError((err, c) => {
-  console.error('アプリケーションエラー:', err);
-  return c.json({
-    error: 'Internal Server Error',
-    message: err.message,
-    timestamp: new Date().toISOString(),
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
-  }, 500);
-});
-
-// 404エラーハンドリング
-app.notFound((c) => {
-  return c.json({
+  // 404 Not Found
+  return res.status(404).json({
     error: 'Not Found',
-    message: `エンドポイント '${c.req.path}' が見つかりません`,
+    message: `エンドポイント '${path}' が見つかりません`,
     availableEndpoints: [
       '/',
-      '/health', 
-      '/api/info', 
+      '/health',
+      '/api/info',
       '/twitter/:username/rss'
     ],
     suggestion: 'GET /api/info でAPI仕様を確認してください',
     timestamp: new Date().toISOString()
-  }, 404);
-});
-
-console.log('🚀 Twitter Bot RSSHub API が起動しました');
-
-export default handle(app);
+  });
+}

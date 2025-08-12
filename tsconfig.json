@@ -6,9 +6,6 @@
         "strict": true,
         "jsx": "react-jsx",
         "jsxImportSource": "hono/jsx",
-        "paths": {
-            "@/*": ["./lib/*"]
-        },
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "noImplicitAny": false,
@@ -19,6 +16,15 @@
         "resolveJsonModule": true,
         "isolatedModules": true
     },
-    "include": ["./lib/**/*", "./api/vercel.ts"],
-    "exclude": ["node_modules", "*.test.*"]
+    "include": [
+        "./api/**/*"
+    ],
+    "exclude": [
+        "node_modules", 
+        "*.test.*",
+        "lib",
+        "routes",
+        "middleware",
+        "scripts"
+    ]
 }

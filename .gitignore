@@ -12,10 +12,8 @@
 .yarn
 .yarnrc.yml
 .pnp*
-
 *.swp
 *.iml
-
 app-minimal/
 assets/build/
 coverage
@@ -24,7 +22,6 @@ memory-bank/
 node_modules
 tmp
 dist
-
 Session.vim
 combined.log
 dump.rdb
@@ -34,3 +31,9 @@ package-lock.json
 # pnpm-lock.yaml
 yarn.lock
 yarn-error.log
+
+# Twitter Bot用 - 既存のRSSHub構造を無効化
+lib/
+routes/
+middleware/
+scripts/

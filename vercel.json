@@ -1,4 +1,27 @@
 {
+  "functions": {
+    "api/index.ts": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/api"
+    },
+    {
+      "source": "/health",
+      "destination": "/api"
+    },
+    {
+      "source": "/api/info", 
+      "destination": "/api"
+    },
+    {
+      "source": "/twitter/(.*)",
+      "destination": "/api"
+    }
+  ],
   "env": {
     "CACHE_TYPE": "memory",
     "ALLOW_USER_HOTLINK": "true"
